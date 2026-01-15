@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2027 LifeOS | 小麦专属版</title>
+    <style>
+        /* --- V12.0: Sunshine Evolution (温暖、直观、时尚) --- */
+        :root {
+            --bg-color: #FFFBF5;
+            --card-bg: #FFFFFF;
+            --text-main: #2D3748;
+            --text-light: #718096;
+            
+            /* 能量色系 */
+            --primary: #FF9F1C; /* 活力橙 */
+            --secondary: #2EC4B6; /* 薄荷绿 */
+            --blue: #4299E1; /* 天空蓝 */
+            --purple: #9F7AEA; /* 梦想紫 */
+            --danger: #FC8181;
+            
+            --radius: 24px;
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --shadow: 0 10px 40px -10px rgba(255, 159, 28, 0.1);
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-image: 
+                radial-gradient(circle at 100% 0%, #fff0e6 0%, transparent 25%), 
+                radial-gradient(circle at 0% 100%, #e6fffa 0%, transparent 25%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.03);
+            position: relative;
+            margin-bottom: 90px;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        /* 顶部右上角：隐形转化入口 */
+        .top-link {
+            position: absolute; top: 20px; right: 20px;
+            font-size: 12px; color: var(--blue); font-weight: 600;
+            cursor: pointer; background: #EBF8FF; padding: 6px 12px; border-radius: 20px;
+            transition: 0.2s;
+        }
+        .top-link:hover { background: var(--blue); color: white; }
+
+        .header { text-align: center; margin-bottom: 30px; margin-top: 10px; }
+        .emoji-icon { font-size: 48px; display: inline-block; animation: bounce 3s ease-in-out infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        
+        h1 { font-size: 26px; font-weight: 800; margin: 10px 0 5px 0; color: #2d3748; letter-spacing: -0.5px; }
+        .subtitle { font-size: 13px; color: var(--text-light); background: #F7FAFC; padding: 4px 12px; border-radius: 20px; display: inline-block; }
+
+        /* 顶部进度条 */
+        .step-bar { display: flex; gap: 6px; margin-bottom: 25px; height: 5px; border-radius: 3px; overflow: hidden; }
+        .step { flex: 1; background: #EDF2F7; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 4px; }
+        .step.active { background: var(--primary); }
+
+        .view { display: none; opacity: 0; transform: translateY(10px); transition: 0.4s ease; }
+        .view.active { display: block; opacity: 1; transform: translateY(0); }
+
+        .card {
+            background: #FFFFFF; border: 2px solid #F7FAFC;
+            border-radius: 20px; padding: 20px; margin-bottom: 20px;
+            transition: 0.2s; position: relative;
+        }
+        .card:hover { border-color: var(--blue); box-shadow: var(--shadow); }
+        .label { font-size: 12px; color: var(--text-light); font-weight: 700; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        
+        input, textarea, select {
+            width: 100%; background: #F7FAFC; border: 2px solid transparent;
+            color: var(--text-main); padding: 14px; border-radius: 16px; font-size: 15px; font-family: var(--font);
+            box-sizing: border-box; transition: 0.2s; margin-bottom: 10px;
+        }
+        input:focus, textarea:focus { border-color: var(--secondary); background: #FFF; outline: none; }
+        
+        /* 🔋 能量条 */
+        .range-container { position: relative; height: 24px; background: #EDF2F7; border-radius: 12px; margin: 15px 0 5px 0; overflow: hidden; }
+        input[type=range] {
+            position: absolute; top: -12px; left: 0; width: 100%; height: 50px; opacity: 0; cursor: pointer; z-index: 2; margin: 0;
+        }
+        .range-fill {
+            height: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary)); 
+            width: 50%; border-radius: 12px; transition: width 0.2s; position: relative;
+        }
+        .range-fill::after {
+            content: ''; position: absolute; right: 4px; top: 4px; bottom: 4px; width: 4px; background: rgba(255,255,255,0.5); border-radius: 2px;
+        }
+
+        .btn {
+            width: 100%; padding: 16px; border-radius: 16px; border: none; font-size: 16px; font-weight: 700; cursor: pointer;
+            transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 10px;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 8px 20px -4px rgba(255, 159, 28, 0.4); }
+        .btn-primary:hover { background: #FF8F00; transform: translateY(-2px); }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .btn-ghost { background: #EDF2F7; color: var(--text-light); }
+        .btn-ai { background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); color: white; }
+
+        .idea-box {
+            background: linear-gradient(135deg, #E0F7FA 0%, #FFFFFF 100%);
+            border: 2px dashed var(--secondary); border-radius: 16px; padding: 20px; margin-top: 15px;
+            display: none; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* 冲刺格子 */
+        .sprint-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 5px; }
+        .sprint-box {
+            aspect-ratio: 1; background: #F7FAFC; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 12px; color: #CBD5E0; font-weight: bold; transition: 0.2s; border: 1px solid transparent;
+        }
+        .sprint-box:hover { border-color: var(--primary); }
+        .sprint-box.done { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(255, 159, 28, 0.3); }
+
+        /* 赛季面板 */
+        .season-panel { margin-bottom: 20px; transition: 0.3s; }
+        .season-panel.locked { opacity: 0.6; filter: grayscale(100%); pointer-events: none; }
+        .season-header { font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .lock-icon { font-size: 16px; }
+
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #FFFFFF; padding: 12px 30px; border-radius: 40px;
+            display: flex; gap: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05); z-index: 100;
+        }
+        .dock-item {
+            font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; position: relative;
+        }
+        .dock-item:hover { opacity: 0.8; transform: translateY(-3px); }
+        .dock-item.active { opacity: 1; transform: translateY(-5px); }
+        .dock-item.active::after {
+            content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 5px; height: 5px; background: var(--primary); border-radius: 50%;
+        }
+
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; margin-left: 8px; }
+        .badge-bad { background: #FED7D7; color: #C53030; }
+        .badge-good { background: #C6F6D5; color: #2F855A; }
+
+        .status-card { text-align: center; padding: 20px; border-radius: 16px; margin-top: 15px; display: none; }
+        .status-good { background: #E6FFFA; color: #234E52; border: 1px solid #B2F5EA; }
+        .status-warn { background: #FFF5F5; color: #742A2A; border: 1px solid #FEB2B2; }
+
+        /* B端转化卡片 - 优化排版 */
+        .biz-card {
+            background: #2D3748; color: white;
+            border-radius: 20px; padding: 24px; margin-top: 25px;
+            position: relative; overflow: hidden;
+            box-shadow: 0 15px 40px rgba(45, 55, 72, 0.4);
+        }
+        .biz-card-header {
+            font-weight: 800; font-size: 18px; margin-bottom: 15px; 
+            letter-spacing: -0.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        .biz-list {
+            font-size: 14px; color: #E2E8F0; margin: 0; padding-left: 20px;
+            line-height: 1.8;
+        }
+        .biz-list li { margin-bottom: 5px; }
+        .qr-container {
+            background: white; padding: 10px; border-radius: 12px; 
+            width: 140px; margin: 20px auto 10px auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .qr-label {
+            font-size: 12px; text-align: center; color: #A0AEC0; letter-spacing: 1px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- 转化入口 -->
+    <div class="top-link" onclick="navTo('upgrade')">🤝 寻求小麦支持</div>
+
+    <!-- 顶部进度条 -->
+    <div class="step-bar">
+        <div class="step active" id="step-1"></div>
+        <div class="step" id="step-2"></div>
+        <div class="step" id="step-3"></div>
+        <div class="step" id="step-4"></div>
+        <div class="step" id="step-5"></div>
+    </div>
+
+    <!-- VIEW 1: 首页 (Home) - 积极乐观文案 -->
+    <div id="view-home" class="view active">
+        <div class="header">
+            <div class="emoji-icon">🌅</div>
+            <h1>2027 LifeOS</h1>
+            <div class="subtitle">小麦定制版</div>
+        </div>
+        <div class="card" style="text-align:center; border:none; background:transparent;">
+            <p style="font-size: 16px; font-weight: 600; color:var(--text-main); margin-bottom: 10px;">
+                这不是一个枯燥的清单，<br>
+                这是一个让你再次爱上生活的理由。
+            </p>
+            <p style="font-size: 13px; color:var(--text-light); line-height:1.6; margin-bottom:30px;">
+                用战略家的眼光，重新设计你热爱的生活。<br>
+                准备好迎接全新的自己了吗？
+            </p>
+            <button class="btn btn-primary" onclick="navTo('audit')">🚀 开启我的 2027</button>
+            <p style="font-size:12px; color:#A0AEC0; margin-top:25px; background: #F7FAFC; padding: 8px; border-radius: 8px; display: inline-block;">
+                🔒 数据仅保存在您的设备本地，他人无法获取
+            </p>
+        </div>
+    </div>
+
+    <!-- VIEW 2: 审计 (Audit) - 时尚四维可视化 -->
+    <div id="view-audit" class="view">
+        <div class="header"><div class="emoji-icon">📊</div><h2>第一步：能量体检</h2></div>
+        
+        <div class="card">
+            <div class="label">🧬 生命能量电池 (Life Battery)</div>
+            <p style="font-size:12px; color:var(--text-light); margin-bottom:20px;">拖动滑块，诚实面对当下的状态。</p>
+            
+            <!-- 身体 -->
+            <div style="margin-bottom:20px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:bold; margin-bottom:5px;">
+                    <span>🔋 身体燃料</span>
+                    <span id="score-1">5/10</span>
+                </div>
+                <div class="range-container">
+                    <div id="fill-1" class="range-fill" style="width: 50%;"></div>
+                    <input type="range" min="1" max="10" value="5" oninput="updateScore(1, this.value)">
+                </div>
+                <div id="msg-1" style="font-size:11px; text-align: right; height: 15px;"></div>
+            </div>
+
+            <!-- 事业 -->
+            <div style="margin-bottom:20px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:bold; margin-bottom:5px;">
+                    <span>💼 事业护城河</span>
+                    <span id="score-2">5/10</span>
+                </div>
+                <div class="range-container">
+                    <div id="fill-2" class="range-fill" style="width: 50%; background: linear-gradient(90deg, #63B3ED, #3182CE);"></div>
+                    <input type="range" min="1" max="10" value="5" oninput="updateScore(2, this.value)">
+                </div>
+                <div id="msg-2" style="font-size:11px; text-align: right; height: 15px;"></div>
+            </div>
+
+            <!-- 金钱 -->
+            <div style="margin-bottom:20px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:bold; margin-bottom:5px;">
+                    <span>💰 金钱系统</span>
+                    <span id="score-3">5/10</span>
+                </div>
+                <div class="range-container">
+                    <div id="fill-3" class="range-fill" style="width: 50%; background: linear-gradient(90deg, #F6E05E, #ECC94B);"></div>
+                    <input type="range" min="1" max="10" value="5" oninput="updateScore(3, this.value)">
+                </div>
+                <div id="msg-3" style="font-size:11px; text-align: right; height: 15px;"></div>
+            </div>
+
+            <!-- 情绪 -->
+            <div style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:bold; margin-bottom:5px;">
+                    <span>❤️ 内在情绪</span>
+                    <span id="score-4">5/10</span>
+                </div>
+                <div class="range-container">
+                    <div id="fill-4" class="range-fill" style="width: 50%; background: linear-gradient(90deg, #F687B3, #D53F8C);"></div>
+                    <input type="range" min="1" max="10" value="5" oninput="updateScore(4, this.value)">
+                </div>
+                <div id="msg-4" style="font-size:11px; text-align: right; height: 15px;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="label">🗑️ 遗憾博物馆</div>
+            <input type="text" id="regret" placeholder="2025年，哪件事最让你意难平？">
+        </div>
+
+        <button class="btn btn-primary" onclick="navTo('gps')">下一步：设计未来 👉</button>
+    </div>
+
+    <!-- VIEW 3: GPS (Strategy) -->
+    <div id="view-gps" class="view">
+        <div class="header"><div class="emoji-icon">🧭</div><h2>第二步：设置导航</h2></div>
+
+        <div class="card">
+            <div class="label">🌟 年度关键词 (The Theme)</div>
+            <input type="text" placeholder="用一个词定义你的2027 (例：Build / Heal / Flow)">
+        </div>
+
+        <div class="card">
+            <div class="label">📍 北极星目标 (North Star)</div>
+            <input type="text" id="goal" placeholder="2026 最核心的一个大目标">
+            <textarea rows="2" placeholder="Why: 为什么非做不可？这个目标能带给你什么快乐？"></textarea>
+        </div>
+
+        <div class="card" style="border-color:#FED7D7;">
+            <div class="label" style="color:var(--danger);">🚫 反向目标 (Anti-Goal)</div>
+            <p style="font-size:12px; color:var(--text-light);">为了达成目标，你<b>绝对不</b>牺牲什么？</p>
+            <input type="text" placeholder="例：绝不牺牲睡眠，绝不透支信用卡">
+        </div>
+        
+        <div class="card">
+            <div class="label">🔮 水晶球预演 (Pre-Mortem)</div>
+            <p style="font-size:12px; color:var(--text-light);">假设 Q1 失败了，是因为什么？（提前看见坑，才能绕过坑）</p>
+            <textarea rows="2" placeholder="例：因为贪多报了太多课，导致精力分散..."></textarea>
+        </div>
+
+        <button class="btn btn-primary" onclick="navTo('radar')">下一步：寻找风口 👉</button>
+    </div>
+
+    <!-- VIEW 4: 雷达 (Radar) -->
+    <div id="view-radar" class="view">
+        <div class="header"><div class="emoji-icon">💰</div><h2>第三步：灵感孵化</h2></div>
+        
+        <div class="card">
+            <div class="label">🧪 搞钱实验室</div>
+            <p style="font-size:13px; color:var(--text-light); margin-bottom:15px;">输入技能，混合风口，生成你的商业切入点。</p>
+            
+            <label style="font-size:12px; color:#aaa;">1. 你的核心技能/兴趣</label>
+            <input type="text" id="my-skill" placeholder="例：写作、咖啡、带娃、编程...">
+            
+            <label style="font-size:12px; color:#aaa;">2. 选择一个催化剂</label>
+            <select id="trend-select" style="background:#fff;">
+                <option value="AI">🤖 AI 工具/自动化 (效率)</option>
+                <option value="Soul">🧘‍♀️ 身心灵/情绪价值 (抚慰)</option>
+                <option value="IP">📢 超级个体/个人品牌 (信任)</option>
+                <option value="Health">🌿 大健康/精力管理 (长寿)</option>
+                <option value="Parenting">👶 育儿/缓解焦虑 (未来)</option>
+            </select>
+
+            <button class="btn btn-secondary" style="margin-top:10px;" onclick="generateBizIdea()">✨ 生成我的商业灵感</button>
+
+            <!-- 动态结果 -->
+            <div id="idea-result" class="idea-box">
+                <div style="font-weight:bold; color:var(--text-main); margin-bottom:5px;">💡 你的专属切入点：</div>
+                <div id="idea-text" style="font-size:14px; line-height:1.6; color:#2D3748;"></div>
+            </div>
+        </div>
+
+        <!-- 转化：寻求援助 -->
+        <div class="card" style="background:#EBF8FF; border:1px solid #BEE3F8; text-align: center;">
+            <div style="font-size:24px; margin-bottom:5px;">🤔</div>
+            <div style="font-weight:bold; color:var(--blue); font-size:14px;">依然感到迷茫？没有灵感？</div>
+            <p style="font-size:12px; color:var(--text-light); margin:5px 0 15px 0;">有时候，你需要的不只是工具，而是一个能听懂你困惑的人。</p>
+            <button class="btn" style="background:white; color:var(--blue); border:1px solid var(--blue);" onclick="navTo('upgrade')">🙋‍♂️ 找小麦聊聊</button>
+        </div>
+
+        <button class="btn btn-primary" onclick="navTo('engine')">下一步：落地执行 👉</button>
+    </div>
+
+    <!-- VIEW 5: 引擎 (Engine) - 自动解锁 Q2 -->
+    <div id="view-engine" class="view">
+        <div class="header"><div class="emoji-icon">⚡️</div><h2>第四步：快乐执行</h2></div>
+
+        <!-- 1. 置顶：四季冲刺系统 -->
+        <div class="card">
+            <!-- Q1 -->
+            <div id="q1-panel" class="season-panel active">
+                <div class="season-header" style="color:var(--primary);">
+                    <span>🏃‍♂️ Q1 赛季 (1-12周)</span>
+                    <span>🔥 进行中</span>
+                </div>
+                <div class="sprint-grid" id="q1-grid"></div>
+                <p style="font-size:11px; color:#A0AEC0; margin-top:5px;">*点满12格，自动解锁下一赛季</p>
+            </div>
+
+            <!-- Q2 (Locked) -->
+            <div id="q2-panel" class="season-panel locked">
+                <div class="season-header" style="color:var(--text-light);">
+                    <span>❄️ Q2 赛季</span>
+                    <span class="lock-icon">🔒 待解锁</span>
+                </div>
+                <div style="height:30px; background:#EDF2F7; border-radius:8px;"></div>
+            </div>
+
+             <!-- Q3 (Locked) -->
+             <div id="q3-panel" class="season-panel locked">
+                <div class="season-header" style="color:var(--text-light);">
+                    <span>🍂 Q3 赛季</span>
+                    <span class="lock-icon">🔒 待解锁</span>
+                </div>
+                <div style="height:30px; background:#EDF2F7; border-radius:8px;"></div>
+            </div>
+        </div>
+
+        <!-- 2. 中间：身份与85%计算 -->
+        <div class="card">
+            <div class="label">🆔 身份重塑 (Identity Shifting)</div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <input type="text" id="new-id" placeholder="新身份：我是..." style="margin:0;">
+                <button class="btn btn-secondary" style="width:auto; padding:0 15px; font-size:13px;" onclick="alert('确认成功！\n请记住：每一次行动，都是在为这个新身份投票。')">确认</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="label">📊 85% 甜蜜区计算器</div>
+            <div style="display:flex; gap:10px;">
+                <input type="number" id="plan-num" placeholder="计划 5 件">
+                <input type="number" id="done-num" placeholder="完成 4 件">
+            </div>
+            <button class="btn btn-ghost" onclick="calc85()">分析我的状态</button>
+            <div id="status-feedback" class="status-card"></div>
+        </div>
+
+        <!-- 3. 底部：AI 提示词 -->
+        <div class="card" style="border-color: #E9D8FD;">
+            <div class="label" style="color:var(--purple);">🤖 AI 数字教练 (AI Coach)</div>
+            <p style="font-size:12px; color:var(--text-light);">复制此指令给 AI，开启你的每日早会。</p>
+            <textarea id="ai-prompt" rows="3" style="font-size:12px; background:#F7FAFC; color:#4A5568;">你是 2027 年的小麦，现在是 2026 年 [日期]。我已经完成了 GPS 设定。请根据未来的成功经验，对我今天的计划进行复盘。请问我三个反思问题，帮助我保持专注。</textarea>
+            <button class="btn btn-ai" style="padding:10px; font-size:13px;" onclick="copyPrompt()">📋 一键复制指令</button>
+        </div>
+
+        <button class="btn btn-primary" onclick="navTo('upgrade')">最后一步：寻求支持 👉</button>
+    </div>
+
+    <!-- VIEW 6: 升级 (Upgrade) -->
+    <div id="view-upgrade" class="view">
+        <div class="header"><div class="emoji-icon">🤝</div><h2>支持与服务</h2></div>
+
+        <div class="card" style="text-align:center;">
+            <p style="font-size:14px; margin-bottom:20px; color:var(--text-main);">
+                我是<b>小麦</b>，一名企业管理咨询师。<br>
+                我开发这套系统，是为了让你能做自己的 CEO。
+            </p>
+
+            <!-- C端：社群 -->
+            <div style="background:#F0FFF4; border:1px solid #C6F6D5; border-radius:16px; padding:20px; margin-bottom:20px; text-align:left;">
+                <div style="font-weight:bold; color:#276749; font-size:16px;">🌱 方案 A：个人成长社群</div>
+                <div style="font-size:13px; color:#48BB78; margin:8px 0;">适合需要环境和监督的同路人。<br>• 每周战略复盘视频<br>• 免费的同频伙伴</div>
+                <button class="btn btn-secondary" style="margin-top:15px;" onclick="window.open('https://youtube.com')">👉 关注频道 / 加入社群</button>
+            </div>
+
+            <!-- B端：咨询 (小麦专属二维码) -->
+            <div class="biz-card">
+                <div class="biz-card-header">🔥 方案 B：1对1 战略咨询</div>
+                
+                <ul class="biz-list">
+                    <li>🎯 <b>深度定制：</b>量身打造你的 2027 战略地图</li>
+                    <li>🧱 <b>系统搭建：</b>从 0 到 1 建立你的 LifeOS</li>
+                    <li>💡 <b>全程陪跑：</b>像私教一样，陪你复盘每一次迭代</li>
+                </ul>
+                
+                <!-- 二维码区域 -->
+                <div class="qr-container">
+                    <!-- 请替换下方 src 为您的图片文件名 -->
+                    <img src="微信图片_20260115071628_31_8.png" alt="小麦的二维码" style="width:100%; display:block;">
+                </div>
+                <p class="qr-label">扫码预约 · 开启深度对话</p>
+            </div>
+
+        </div>
+        
+        <button class="btn btn-ghost" onclick="navTo('home')">🏠 回到首页</button>
+    </div>
+
+</div>
+
+<!-- 底部 Dock -->
+<div class="dock">
+    <div class="dock-item active" onclick="navTo('home')">🏠</div>
+    <div class="dock-item" onclick="navTo('audit')">📊</div>
+    <div class="dock-item" onclick="navTo('gps')">🧭</div>
+    <div class="dock-item" onclick="navTo('radar')">💰</div>
+    <div class="dock-item" onclick="navTo('engine')">⚡️</div>
+</div>
+
+<script>
+    // 导航逻辑
+    const views = ['home', 'audit', 'gps', 'radar', 'engine', 'upgrade'];
+    
+    function navTo(targetId) {
+        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-' + targetId).classList.add('active');
+        
+        document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('active'));
+        const index = views.indexOf(targetId);
+        if(index > -1 && index < 5) {
+            document.querySelectorAll('.dock-item')[index].classList.add('active');
+        }
+
+        document.querySelectorAll('.step').forEach((el, idx) => {
+            if(idx <= index) el.classList.add('active');
+            else el.classList.remove('active');
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- 评分系统逻辑 (能量电池可视化) ---
+    function updateScore(id, val) {
+        document.getElementById('score-' + id).innerText = val + "/10";
+        document.getElementById('fill-' + id).style.width = (val * 10) + "%";
+        
+        const msg = document.getElementById('msg-' + id);
+        if(val < 5) {
+            msg.innerHTML = "<span class='status-badge badge-bad'>系统漏洞</span> 需优先修复";
+        } else if (val > 8) {
+            msg.innerHTML = "<span class='status-badge badge-good'>护城河</span> 核心优势";
+        } else {
+            msg.innerHTML = "<span style='color:#A0AEC0; font-size:11px;'>正常运行</span>";
+        }
+    }
+
+    // --- 自动解锁 Q2 逻辑 (Season Unlock) ---
+    let q1Progress = 0;
+    
+    // 初始化 Q1 格子
+    const q1Grid = document.getElementById('q1-grid');
+    for(let i=1; i<=12; i++) {
+        const div = document.createElement('div');
+        div.className = 'sprint-box';
+        div.innerText = 'W' + i;
+        div.onclick = function() { toggleQ1(this); };
+        q1Grid.appendChild(div);
+    }
+
+    function toggleQ1(el) {
+        if(el.classList.contains('done')) {
+            el.classList.remove('done');
+            q1Progress--;
+        } else {
+            el.classList.add('done');
+            q1Progress++;
+        }
+
+        // 检查是否解锁 Q2
+        if(q1Progress === 12) {
+            setTimeout(() => {
+                alert("🎉 恭喜小麦！Q1 赛季完美通关！\n正在为你解锁 Q2 战场...");
+                const q2 = document.getElementById('q2-panel');
+                q2.classList.remove('locked');
+                q2.innerHTML = `
+                    <div class="season-header" style="color:var(--secondary);">
+                        <span>❄️ Q2 赛季 (13-24周)</span>
+                        <span>🔥 已激活</span>
+                    </div>
+                    <div class="sprint-grid" id="q2-grid"></div>
+                `;
+                // 生成 Q2 格子
+                const q2Grid = document.getElementById('q2-grid');
+                for(let i=13; i<=24; i++) {
+                    const d = document.createElement('div');
+                    d.className = 'sprint-box';
+                    d.innerText = 'W' + i;
+                    q2Grid.appendChild(d);
+                }
+            }, 500);
+        }
+    }
+
+    // 85% 计算
+    function calc85() {
+        const p = document.getElementById('plan-num').value;
+        const d = document.getElementById('done-num').value;
+        const fb = document.getElementById('status-feedback');
+        
+        if(!p || !d) return;
+        const rate = d/p;
+        const pct = Math.round(rate*100);
+        
+        fb.style.display = 'block';
+        if(rate >= 0.8 && rate <= 0.9) {
+            fb.className = 'status-card status-good';
+            fb.innerHTML = `<h3>🎉 甜蜜区 (${pct}%)</h3><p>完美心流！这就是高手的节奏，请保持！</p>`;
+        } else if(rate > 0.9) {
+            fb.className = 'status-card status-warn';
+            fb.innerHTML = `<h3>🟡 太简单了 (${pct}%)</h3><p>舒适区警报！下周请加码。</p>`;
+        } else {
+            fb.className = 'status-card status-warn';
+            fb.innerHTML = `<h3>🟠 需调整 (${pct}%)</h3><p>有点吃力。记住：85% 才是最快的。</p>`;
+        }
+    }
+
+    function generateBizIdea() {
+        const skill = document.getElementById('my-skill').value;
+        const trend = document.getElementById('trend-select').value;
+        const resultBox = document.getElementById('idea-result');
+        const resultText = document.getElementById('idea-text');
+
+        if(!skill) { alert('请先输入你的技能或兴趣！'); return; }
+
+        resultBox.style.display = 'block';
+        
+        let idea = "";
+        switch(trend) {
+            case 'AI': idea = `利用 AI 将你的<b>“${skill}”</b>标准化。试着制作一个<b>“${skill} 提效 GPTs”</b>，做该领域的“效率顾问”。`; break;
+            case 'Soul': idea = `结合<b>“${skill}”</b>提供情绪价值。例如：做<b>“${skill} 疗愈社群”</b>或冥想音频。卖的不是技能，是抚慰。`; break;
+            case 'IP': idea = `把你实践<b>“${skill}”</b>的过程做成连续剧。教别人<b>“如何通过 ${skill} 避坑”</b>是永远的刚需。`; break;
+            case 'Health': idea = `将<b>“${skill}”</b>与健康结合。例如：针对 ${skill} 从业者的<b>“精力管理指南”</b>。`; break;
+            case 'Parenting': idea = `开发一个能通过<b>“${skill}”</b>帮孩子提升认知、或帮父母省时间的产品。`; break;
+        }
+        
+        resultText.innerHTML = idea;
+    }
+
+    function copyPrompt() {
+        const text = document.getElementById('ai-prompt').value;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('✅ 指令已复制！\n快去发给 ChatGPT，开始你的早会吧。');
+        });
+    }
+</script>
+
+</body>
+</html>
