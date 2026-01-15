@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2027 LifeOS | 小麦专属版</title>
+    <title>2027 LifeOS | 你的专属版</title>
     <style>
         /* --- V12.0: Sunshine Evolution (温暖、直观、时尚) --- */
         :root {
@@ -426,7 +426,7 @@
         <div class="card" style="border-color: #E9D8FD;">
             <div class="label" style="color:var(--purple);">🤖 AI 数字教练 (AI Coach)</div>
             <p style="font-size:12px; color:var(--text-light);">复制此指令给 AI，开启你的每日早会。</p>
-            <textarea id="ai-prompt" rows="3" style="font-size:12px; background:#F7FAFC; color:#4A5568;">你是 2027 年的小麦，现在是 2026 年 [日期]。我已经完成了 GPS 设定。请根据未来的成功经验，对我今天的计划进行复盘。请问我三个反思问题，帮助我保持专注。</textarea>
+            <textarea id="ai-prompt" rows="3" style="font-size:12px; background:#F7FAFC; color:#4A5568;">你是 2027 年的（你的名字），现在是 2026 年 [日期]。我已经完成了 GPS 设定。请根据未来的成功经验，对我今天的计划进行复盘。请问我三个反思问题，帮助我保持专注。</textarea>
             <button class="btn btn-ai" style="padding:10px; font-size:13px;" onclick="copyPrompt()">📋 一键复制指令</button>
         </div>
 
@@ -546,7 +546,7 @@
         // 检查是否解锁 Q2
         if(q1Progress === 12) {
             setTimeout(() => {
-                alert("🎉 恭喜小麦！Q1 赛季完美通关！\n正在为你解锁 Q2 战场...");
+                alert("🎉 恭喜你！Q1 赛季完美通关！\n正在为你解锁 Q2 战场...");
                 const q2 = document.getElementById('q2-panel');
                 q2.classList.remove('locked');
                 q2.innerHTML = `
@@ -622,4 +622,5 @@
 </script>
 
 </body>
+
 </html>
