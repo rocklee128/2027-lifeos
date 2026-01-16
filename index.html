@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>2027 LifeOS | 你的定制版</title>
+    
+    <!-- 社交分享配置 -->
+    <meta property="og:title" content="2027 LifeOS | 你的定制版">
+    <meta property="og:description" content="这不是一份枯燥的清单，这是一个让你再次爱上生活的理由。用咨询顾问的战略思维，重新设计你的 2027。">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1495539406979-bf61750d38ad?q=80&w=1200&auto=format&fit=crop">
+    <meta property="og:type" content="website">
+
     <style>
-        /* --- V16.0: Final Perfect Version (With Definitions) --- */
+        /* --- V18.0: Final Deployment Version --- */
         :root {
             --bg-color: #FFFBF5;
             --card-bg: #FFFFFF;
@@ -155,6 +162,7 @@
         }
         .biz-card-header { font-weight: 800; font-size: 16px; margin-bottom: 12px; letter-spacing: -0.5px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
         .biz-list { font-size: 13px; color: #E2E8F0; margin: 0; padding-left: 18px; line-height: 1.6; }
+        
         .qr-container { background: white; padding: 8px; border-radius: 10px; width: 120px; margin: 15px auto 8px auto; }
         .qr-label { font-size: 11px; text-align: center; color: #A0AEC0; letter-spacing: 1px; }
 
@@ -199,7 +207,7 @@
         </div>
     </div>
 
-    <!-- VIEW 2: 审计 (Updated with Definitions) -->
+    <!-- VIEW 2: 审计 -->
     <div id="view-audit" class="view">
         <div class="header"><div class="emoji-icon">📊</div><h2>第一步：能量体检</h2></div>
         
@@ -416,14 +424,25 @@
                 我开发这套系统，是为了让你能做自己的 CEO。
             </p>
 
-            <!-- C端 -->
+            <!-- C端：方案A -->
             <div style="background:#F0FFF4; border:1px solid #C6F6D5; border-radius:16px; padding:18px; margin-bottom:20px; text-align:left;">
-                <div style="font-weight:bold; color:#276749; font-size:15px;">🌱 方案 A：个人成长社群</div>
-                <div style="font-size:12px; color:#48BB78; margin:8px 0;">适合需要环境和监督的同路人。<br>• 每周战略复盘视频<br>• 免费的同频伙伴</div>
-                <button class="btn btn-secondary" style="margin-top:15px;" onclick="window.open('https://youtube.com')">👉 关注频道 / 加入社群</button>
+                <div style="font-weight:bold; color:#276749; font-size:15px;">🌱 方案 A：小麥的精神小屋</div>
+                <div style="font-size:12px; color:#48BB78; margin:8px 0; line-height:1.6;">
+                    适合需要环境和监督的同路人。<br>
+                    这里有免费的同频伙伴和每周复盘。<br>
+                    👇 <b>点击下方进入我的 YouTube 频道</b>
+                </div>
+                <button class="btn btn-secondary" style="margin-top:10px;" onclick="window.open('https://www.youtube.com/@xiao-mai-128')">📺 访问精神小屋</button>
+                
+                <!-- 微信群二维码位置 -->
+                <div class="qr-container" style="background:#fff; border:1px dashed #48BB78; margin-top:15px;">
+                    <!-- 请将微信群二维码命名为 wechat_group.png 并放在同一文件夹 -->
+                    <img src="wechat_group.png" alt="加入微信群" style="width:100%; display:block; opacity:0.8;" onerror="this.style.display='none'; this.nextElementSibling.innerText='(请自行添加微信群二维码)'">
+                </div>
+                <p class="qr-label" style="color:#276749;">或扫码加入【同路人】交流群</p>
             </div>
 
-            <!-- B端 -->
+            <!-- B端：方案B -->
             <div class="biz-card">
                 <div class="biz-card-header">🔥 方案 B：1对1 战略咨询</div>
                 <ul class="biz-list">
@@ -432,6 +451,7 @@
                     <li>💡 <b>全程陪跑：</b>像私教一样，陪你复盘每一次迭代</li>
                 </ul>
                 <div class="qr-container">
+                    <!-- 个人二维码 -->
                     <img src="微信图片_20260115071628_31_8.png" alt="小麦的二维码" style="width:100%; display:block;">
                 </div>
                 <p class="qr-label">扫码预约 · 开启深度对话</p>
